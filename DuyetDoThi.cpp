@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <fstream>
 #include <vector>
 using namespace std;
@@ -39,11 +39,10 @@ void addLast(node* &head, int x, int weight) {
 		p->link = create(x, weight);
 	}
 }
-
 void display(node* head[], int n) {
 	for (int i = 0; i < n; i++) {
 		node *p = head[i];
-		cout << i + 1 << ": ";
+		cout << i << ": ";
 		while (p != nullptr) {
 			cout << p->data << "(" << p->w << ") ";
 			p = p->link;
@@ -52,17 +51,15 @@ void display(node* head[], int n) {
 	}
 }
 
-void docFile(node* head[], int &n) { 
+void docFile(node* head[], int &n) {
 	ifstream inF("input_DoThi.txt");
 	if (inF.is_open()) {
 		inF >> n;
 		while (!inF.eof()) {
-			int temp, next, weight;
-			inF >> temp >> next >> weight;
-			if (temp > 0 && temp <= n && next > 0 && next <= n) { 
-				addLast(head[temp - 1], next, weight);
-				addLast(head[next - 1], temp, weight);
-			}
+			int pre, next, weight;
+			inF >> pre >> next >> weight;
+			addLast(head[pre], next, weight);
+			addLast(head[next], pre, weight);
 		}
 		inF.close();
 	}
@@ -110,12 +107,12 @@ void BFS(node *head[], int n, int v) {
 
 	while (!temp.is_empty()) {
 		node* u = temp.deQueue();
-		cout << u->data  << " "; 
+		cout << u->data << " ";
 		node* p = head[u->data];
 		while (p != nullptr) {
-			if (!visited[p->data - 1]) { 
-				visited[p->data - 1] = true;
-				temp.enQueue(p->data - 1); 
+			if (!visited[p->data]) {
+				visited[p->data] = true;
+				temp.enQueue(p->data);
 			}
 			p = p->link;
 		}
@@ -155,13 +152,13 @@ void DFS(node *head[], int n, int v) {
 
 	while (!isEmpty(s)) {
 		int u = pop(s);
-		cout << u << " "; 
+		cout << u << " ";
 		node* p = head[u];
 		while (p != nullptr) {
-			if (!visited[p->data - 1]) { 
-				visited[p->data - 1] = true;
+			if (!visited[p->data ]) {
+				visited[p->data] = true;
 				//cout << p->data<<" ";
-				push(s, p->data - 1); 
+				push(s, p->data);
 			}
 			p = p->link;
 		}
@@ -176,12 +173,12 @@ int main() {
 	display(head, n);
 
 	cout << "===== BFS =====\n";
-	BFS(head, n, 0); 
+	BFS(head, n, 0);
 
 	cout << endl << "===== DFS =====\n";
 	DFS(head, n, 0);
 
-			
+
 	for (int i = 0; i < n; i++) {
 		node* p = head[i];
 		while (p != nullptr) {
